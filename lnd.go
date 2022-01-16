@@ -117,11 +117,11 @@ func (l Lnd) ListInvoices() (gjson.Result, error) {
 	return l.CallJSON("GET", "v1/invoices", nil)
 }
 
-func (l Lnd) PayInvoice(invoice string, fee_limit_sat uint) (gjson.Result, error) {
+func (l Lnd) PayInvoice(invoice string, fee_limit_msat float64) (gjson.Result, error) {
 	data := map[string]interface{}{
 		"timeout_seconds": 60,
 		"payment_request": invoice,
-		"fee_limit_sat":   fee_limit_sat,
+		"fee_limit_msat":  fee_limit_msat,
 	}
 	return l.CallJSON("POST", "v2/router/send", data)
 }
