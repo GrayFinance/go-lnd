@@ -90,6 +90,11 @@ func (l Lnd) CallJSON(method string, path string, params map[string]interface{})
 		return gjson.Result{}, err
 	}
 
+	if string(body) == "Not Found\n" {
+		err := fmt.Errorf("Wallet lock")
+		return gjson.Result{}, err
+	}
+
 	rjson := gjson.ParseBytes(body)
 	if rjson.String() == "0" {
 		err := fmt.Errorf(string(body))
