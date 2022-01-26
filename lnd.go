@@ -43,6 +43,9 @@ func Connect(host string, tls_cert_path string, macaroon_path string) *Lnd {
 			MacaroonData: hex.EncodeToString(macaroon),
 		},
 	}
+	if _, err := lnd.GetInfo(); err != nil {
+		log.Fatal(err)
+	}
 	return lnd
 }
 
@@ -136,4 +139,8 @@ func (l Lnd) DecodeInvoice(invoice string) (gjson.Result, error) {
 
 func (l Lnd) InvoicesSubscribe() (*bufio.Reader, error) {
 	return l.CallStream("GET", "v1/invoices/subscribe", nil)
+}
+
+func (l Lnd) GetInfo() (gjson.Result, error) {
+	return l.CallJSON("GET", "v1/getinfo", nil)
 }
