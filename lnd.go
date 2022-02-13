@@ -149,3 +149,7 @@ func (l Lnd) InvoicesSubscribe() (*bufio.Reader, error) {
 func (l Lnd) GetInfo() (gjson.Result, error) {
 	return l.CallJSON("GET", "v1/getinfo", nil)
 }
+
+func (l Lnd) ChannelBalance() (gjson.Result, error) {
+	return l.CallJSON("GET", "v1/balance/channels", nil)
+}
