@@ -54,6 +54,7 @@ func (l Lnd) CallMake(method string, path string, params map[string]interface{})
 	if err != nil {
 		return nil, err
 	}
+
 	req, err := http.NewRequest(method, l.Host+"/"+path, bytes.NewBuffer(data))
 	if err != nil {
 		return nil, err
@@ -103,6 +104,9 @@ func (l Lnd) CallJSON(method string, path string, params map[string]interface{})
 
 	if rjson.Get("error").String() != "" {
 		err := fmt.Errorf(rjson.Get("error").Get("message").String())
+		if err.Error() == "" {
+			err = fmt.Errorf(rjson.Get("error").String())
+		}
 		return gjson.Result{}, err
 	}
 	return rjson, nil
@@ -148,4 +152,8 @@ func (l Lnd) InvoicesSubscribe() (*bufio.Reader, error) {
 
 func (l Lnd) GetInfo() (gjson.Result, error) {
 	return l.CallJSON("GET", "v1/getinfo", nil)
+}
+
+func (l Lnd) ChannelBalance() (gjson.Result, error) {
+	return l.CallJSON("GET", "v1/balance/channels", nil)
 }
